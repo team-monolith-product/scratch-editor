@@ -1,5 +1,5 @@
 {
-  "name": "@scratch/scratch-gui",
+  "name": "@team-monolith/scratch-gui",
   "version": "14.1.0",
   "description": "Graphical User Interface for creating and running Scratch 3.0 projects",
   "keywords": [],
@@ -182,7 +182,7 @@
     "react-visibility-sensor": "5.1.1",
     "redux-throttle": "0.1.1",
     "scratch-audio": "2.0.268",
-    "scratch-blocks": "2.1.19",
+    "scratch-blocks": "npm:@team-monolith/scratch-blocks@0.4.0",
     "scratch-l10n": "6.1.93",
     "scratch-render-fonts": "1.0.252",
     "startaudiocontext": "1.2.1",

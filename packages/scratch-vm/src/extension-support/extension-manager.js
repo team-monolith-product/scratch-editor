@@ -24,7 +24,13 @@ const builtinExtensions = {
     makeymakey: () => require('../extensions/scratch3_makeymakey'),
     boost: () => require('../extensions/scratch3_boost'),
     gdxfor: () => require('../extensions/scratch3_gdx_for'),
-    faceSensing: () => require('../extensions/scratch3_face_sensing')
+    faceSensing: () => require('../extensions/scratch3_face_sensing'),
+    gcube1: () => require('../extensions/roborisen_g1'),
+    gcube2: () => require('../extensions/roborisen_g2'),
+    gcube3: () => require('../extensions/roborisen_g3'),
+    gcube4: () => require('../extensions/roborisen_g4'),
+    wormBot: () => require('../extensions/roborisen_wormBot'),
+    crawlingBot: () => require('../extensions/roborisen_crawlingBot')
 };
 
 /**

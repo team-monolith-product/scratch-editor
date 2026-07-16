@@ -68,6 +68,17 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             if (prevProps.assetHost !== this.props.assetHost) {
                 storage.setAssetHost?.(this.props.assetHost);
             }
+            // A higher-level HOC may change the projectId prop in place (without a
+            // remount), e.g. when navigating between projects. Re-sync it into the
+            // store so the new project is fetched, mirroring the constructor's sync.
+            if (
+                prevProps.projectId !== this.props.projectId &&
+                this.props.projectId !== '' &&
+                this.props.projectId !== null &&
+                typeof this.props.projectId !== 'undefined'
+            ) {
+                this.props.setProjectId(this.props.projectId.toString());
+            }
             if (this.props.isFetchingWithId && !prevProps.isFetchingWithId) {
                 this.fetchProject(this.props.reduxProjectId, this.props.loadingState);
             }

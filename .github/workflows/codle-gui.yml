@@ -3,9 +3,11 @@ name: Codle Scratch GUI
 on:
   pull_request:
     branches: [develop]
-  push:
-    branches: [feature/TASK-5935-upgrade-resume]
   workflow_dispatch:
+
+concurrency:
+  group: codle-gui-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

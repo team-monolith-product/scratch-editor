@@ -127,6 +127,8 @@ const GUIComponent = props => {
         backpackHost,
         backpackVisible,
         blocksId,
+        blockTypesToShow,
+        onLlmReadySupplementAvailable,
         blocksTabVisible,
         cardsVisible,
         canChangeLanguage,
@@ -477,6 +479,8 @@ const GUIComponent = props => {
                                         <Blocks
                                             key={`${blocksId}/${colorMode}/${theme}`}
                                             canUseCloud={canUseCloud}
+                                            blockTypesToShow={blockTypesToShow}
+                                            onLlmReadySupplementAvailable={onLlmReadySupplementAvailable}
                                             grow={1}
                                             isVisible={blocksTabVisible}
                                             options={{
@@ -590,6 +594,8 @@ GUIComponent.propTypes = {
     basePath: PropTypes.string,
     blocksTabVisible: PropTypes.bool,
     blocksId: PropTypes.string,
+    blockTypesToShow: PropTypes.arrayOf(PropTypes.string),
+    onLlmReadySupplementAvailable: PropTypes.func,
     canChangeLanguage: PropTypes.bool,
     canChangeColorMode: PropTypes.bool,
     canChangeTheme: PropTypes.bool,

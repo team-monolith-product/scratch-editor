@@ -33,6 +33,14 @@ export default eslintConfigScratch.defineConfig(
             'no-undefined': 'warn'
         }
     },
+    {
+        files: ['src/extensions/roborisen_*/index.js'],
+        rules: {
+            'no-alert': 'off',
+            'require-await': 'off',
+            '@stylistic/max-len': ['error', 120, {ignoreStrings: true}]
+        }
+    },
     globalIgnores([
         'benchmark/**/*',
         'coverage/**/*',

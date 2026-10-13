@@ -1,6 +1,5 @@
 const EventEmitter = require('events');
 
-const hull = require('hull.js');
 const twgl = require('twgl.js');
 
 const BitmapSkin = require('./BitmapSkin');
@@ -1990,9 +1989,7 @@ class RenderWebGL extends EventEmitter {
             hullPoints.push(rightHull[j]);
         }
 
-        // Simplify boundary points using hull.js.
-        // TODO: Remove this; this algorithm already generates convex hulls.
-        return hull(hullPoints, Infinity);
+        return hullPoints;
     }
 
     /**

@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [develop]
   workflow_dispatch:
+    inputs:
+      publish:
+        type: boolean
+        default: false
 
 concurrency:
   group: codle-gui-${{ github.head_ref || github.ref }}
@@ -21,6 +25,7 @@ jobs:
         with:
           node-version: 22.22.0
           cache: npm
+          registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
       - run: npm run test:lint --workspace=packages/scratch-gui
@@ -32,3 +37,9 @@ jobs:
         with:
           name: codle-scratch-gui
           path: team-monolith-scratch-gui-*.tgz
+      - if: github.repository == 'team-monolith-product/scratch-editor' && github.event_name == 'workflow_dispatch' && inputs.publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.SCRATCH_GUI_NPM_TOKEN }}
+        run: |
+          test -n "$NODE_AUTH_TOKEN"
+          npm publish ./team-monolith-scratch-gui-*.tgz --registry=https://registry.npmjs.org --access=public --ignore-scripts

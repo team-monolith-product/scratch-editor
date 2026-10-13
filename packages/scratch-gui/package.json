@@ -3,13 +3,14 @@
   "version": "14.1.7",
   "description": "Graphical User Interface for creating and running Scratch 3.0 projects",
   "keywords": [],
-  "homepage": "https://github.com/scratchfoundation/scratch-gui#readme",
+  "homepage": "https://github.com/team-monolith-product/scratch-editor/tree/develop/packages/scratch-gui",
   "bugs": {
-    "url": "https://github.com/scratchfoundation/scratch-editor/issues"
+    "url": "https://github.com/team-monolith-product/scratch-editor/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/scratchfoundation/scratch-editor.git"
+    "url": "git+https://github.com/team-monolith-product/scratch-editor.git",
+    "directory": "packages/scratch-gui"
   },
   "license": "AGPL-3.0-only",
   "author": "Massachusetts Institute of Technology",

@@ -5,6 +5,7 @@ on:
 
 jobs:
   release-prep:
+    if: github.repository == 'scratchfoundation/scratch-editor'
     name: Compute release
     runs-on: ubuntu-latest
     outputs:

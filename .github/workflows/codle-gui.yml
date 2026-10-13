@@ -6,10 +6,6 @@ on:
   push:
     branches: [feature/TASK-5935-upgrade-resume]
   workflow_dispatch:
-    inputs:
-      publish:
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -23,7 +19,6 @@ jobs:
         with:
           node-version: 22.22.0
           cache: npm
-          registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
       - run: npm run test:lint --workspace=packages/scratch-gui
@@ -35,9 +30,3 @@ jobs:
         with:
           name: codle-scratch-gui
           path: team-monolith-scratch-gui-*.tgz
-      - if: github.event_name == 'workflow_dispatch' && inputs.publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          test -n "$NODE_AUTH_TOKEN"
-          npm publish ./team-monolith-scratch-gui-*.tgz --access=public --ignore-scripts

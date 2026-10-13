@@ -357,8 +357,8 @@ class GCubeProtocol{
         return hexStr;
     }
 
-    static rebootMultiroleAggregator() {
-        var txCharSendTest = new Uint8Array(10);
+    static rebootMultiroleAggregator () {
+        const txCharSendTest = new Uint8Array(10);
 
         txCharSendTest[0] = 0xFF;
         txCharSendTest[1] = 0xFF;

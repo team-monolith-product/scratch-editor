@@ -1,0 +1,43 @@
+name: Codle Scratch GUI
+
+on:
+  pull_request:
+    branches: [develop]
+  push:
+    branches: [feature/TASK-5935-upgrade-resume]
+  workflow_dispatch:
+    inputs:
+      publish:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.0
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test:lint --workspace=packages/scratch-gui
+      - run: npm run test:unit --workspace=packages/scratch-gui -- --runInBand
+      - run: npm exec --workspace=packages/scratch-gui -- playwright install --with-deps chromium
+      - run: npm run test:playwright --workspace=packages/scratch-gui -- --project=chromium --workers=2
+      - run: npm pack --workspace=packages/scratch-gui --pack-destination=.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codle-scratch-gui
+          path: team-monolith-scratch-gui-*.tgz
+      - if: github.event_name == 'workflow_dispatch' && inputs.publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          test -n "$NODE_AUTH_TOKEN"
+          npm publish ./team-monolith-scratch-gui-*.tgz --access=public --ignore-scripts

@@ -61,7 +61,8 @@ import roborisenG4ConnectionSmallIconURL from './roborisen_gcube/roborisen_g4/ro
 import roborisenWormBotIconURL from './roborisen_gcube/roborisen_wormbot/roborisen_wormbot.jpg';
 import roborisenWormBotConnectionSmallIconURL from './roborisen_gcube/roborisen_wormbot/roborisen_wormbot-small.png';
 import roborisenCrawlingbotIconURL from './roborisen_gcube/roborisen_crawlingbot/roborisen_crawlingbot.jpg';
-import roborisenCrawlingbotConnectionSmallIconURL from './roborisen_gcube/roborisen_crawlingbot/roborisen_crawlingbot-small.png';
+import roborisenCrawlingbotConnectionSmallIconURL
+    from './roborisen_gcube/roborisen_crawlingbot/roborisen_crawlingbot-small.png';
 
 export default [
     {

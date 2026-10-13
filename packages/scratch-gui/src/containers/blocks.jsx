@@ -2,6 +2,8 @@ import bindAll from 'lodash.bindall';
 import debounce from 'lodash.debounce';
 import defaultsDeep from 'lodash.defaultsdeep';
 import makeToolboxXML from '../lib/make-toolbox-xml';
+import filterToolboxXML, {filterDataFlyout, filterProcedureFlyout} from '../lib/filter-toolbox-xml';
+import getLlmReadySupplement from '../lib/get-llm-ready-supplement';
 import PropTypes from 'prop-types';
 import React from 'react';
 import VMScratchBlocks from '../lib/blocks';
@@ -113,7 +115,7 @@ class Blocks extends React.Component {
             this.props.options,
             {
                 rtl: this.props.isRtl,
-                toolbox: this.props.toolboxXML,
+                toolbox: filterToolboxXML(this.props.toolboxXML, this.props.blockTypesToShow),
                 theme: new this.ScratchBlocks.Theme(
                     this.props.colorMode,
                     getColorsForMode(this.props.colorMode)
@@ -125,11 +127,20 @@ class Blocks extends React.Component {
         this.workspace = this.ScratchBlocks.inject(this.blocks, workspaceConfig);
         this.workspace.registerToolboxCategoryCallback(
             'VARIABLE',
-            this.ScratchBlocks.ScratchVariables.getVariablesCategory
+            workspace => filterDataFlyout(
+                this.ScratchBlocks.ScratchVariables.getVariablesCategory(workspace),
+                this.props.blockTypesToShow
+            )
         );
         this.workspace.registerToolboxCategoryCallback(
             'PROCEDURE',
-            this.ScratchBlocks.ScratchProcedures.getProceduresCategory
+            workspace => filterProcedureFlyout(
+                this.ScratchBlocks.ScratchProcedures.getProceduresCategory(workspace),
+                this.props.blockTypesToShow
+            )
+        );
+        this.props.onLlmReadySupplementAvailable(
+            () => getLlmReadySupplement(this.props.vm, this.ScratchBlocks)
         );
 
         this.toolboxUpdateChangeListener = event => {
@@ -198,7 +209,8 @@ class Blocks extends React.Component {
             this.props.customProceduresVisible !== nextProps.customProceduresVisible ||
             this.props.locale !== nextProps.locale ||
             this.props.anyModalVisible !== nextProps.anyModalVisible ||
-            this.props.stageSize !== nextProps.stageSize
+            this.props.stageSize !== nextProps.stageSize ||
+            this.props.blockTypesToShow !== nextProps.blockTypesToShow
         );
     }
     componentDidUpdate (prevProps) {
@@ -210,7 +222,10 @@ class Blocks extends React.Component {
         // Only rerender the toolbox when the blocks are visible and the xml is
         // different from the previously rendered toolbox xml.
         // Do not check against prevProps.toolboxXML because that may not have been rendered.
-        if (this.props.isVisible && this.props.toolboxXML !== this._renderedToolboxXML) {
+        if (this.props.isVisible && (
+            this.props.toolboxXML !== this._renderedToolboxXML ||
+            this.props.blockTypesToShow !== prevProps.blockTypesToShow
+        )) {
             this.requestToolboxUpdate();
         }
 
@@ -231,6 +246,7 @@ class Blocks extends React.Component {
                 this.setLocale();
             } else {
                 this.props.vm.refreshWorkspace();
+                this.requestToolboxUpdate();
             }
 
             window.dispatchEvent(new Event('resize'));
@@ -239,6 +255,7 @@ class Blocks extends React.Component {
         }
     }
     componentWillUnmount () {
+        this.props.onLlmReadySupplementAvailable();
         this.detachVM();
         // Hide any open field editor and move Blockly focus to the workspace
         // root before disposing. Without this, BlockSvg.dispose() detects the
@@ -296,7 +313,7 @@ class Blocks extends React.Component {
                 .getMetrics().viewTop -
             selectedCategoryScrollPosition;
 
-        this.workspace.updateToolbox(this.props.toolboxXML);
+        this.workspace.updateToolbox(filterToolboxXML(this.props.toolboxXML, this.props.blockTypesToShow));
         this.workspace.getToolbox().runAfterRerender(() => {
             const newCategoryScrollPosition = this.workspace
                 .getFlyout()
@@ -671,6 +688,8 @@ class Blocks extends React.Component {
          
         const {
             anyModalVisible,
+            blockTypesToShow,
+            onLlmReadySupplementAvailable,
             canUseCloud,
             customProceduresVisible,
             extensionLibraryVisible,
@@ -738,6 +757,8 @@ class Blocks extends React.Component {
 
 Blocks.propTypes = {
     anyModalVisible: PropTypes.bool,
+    blockTypesToShow: PropTypes.arrayOf(PropTypes.string),
+    onLlmReadySupplementAvailable: PropTypes.func,
     canUseCloud: PropTypes.bool,
     customProceduresVisible: PropTypes.bool,
     extensionLibraryVisible: PropTypes.bool,
@@ -797,6 +818,7 @@ Blocks.defaultOptions = {
 
 Blocks.defaultProps = {
     isVisible: true,
+    onLlmReadySupplementAvailable: () => {},
     options: Blocks.defaultOptions,
     colorMode: DEFAULT_MODE
 };
